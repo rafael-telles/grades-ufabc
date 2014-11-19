@@ -1,1 +1,145 @@
-Hello!
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>UFABC - Grades</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+
+    <link rel='stylesheet' href='fullcalendar-2.2.1/fullcalendar.css' />
+    <script src='fullcalendar-2.2.1/lib/jquery.min.js'></script>
+    <script src='fullcalendar-2.2.1/lib/moment.min.js'></script>
+    <script src='fullcalendar-2.2.1/fullcalendar.js'></script>
+    <script src='fullcalendar-2.2.1/lang/pt-br.js'></script>
+
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+
+    <script src="http://matricula.ufabc.edu.br/cache/todasDisciplinas.js"></script>
+    <script src="js/funcoes_disciplinas.js"></script>
+    <script src="js/controller.js"></script>
+</head>
+
+<body ng-app="MontadorDeGrades" ng-controller="MontadorController">
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">UFABC - Montador de Grades</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container" style="position:relative; top: 75px;">
+
+        <div class="alert alert-warning alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert">
+                <span aria-hidden="true">&times;</span>
+                <span class="sr-only">Close</span>
+            </button>
+            <p>Em desenvolvimento!</p>
+        </div>
+
+        <h3>Sua grade <small>Total de créditos: {{ contarCreditos() }}</small></h3>
+
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+            Selecionar disciplinas
+        </button>
+        <div id='grade'></div>
+
+
+        <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">&times;</span>
+                            <span class="sr-only">Fechar</span>
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel">Selecione suas disciplinas</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="input-group input-group-lg">
+                            <span class="input-group-addon glyphicon glyphicon-search" aria-hidden="true"></span>
+                            <input type="text" class="form-control" placeholder="Pesquise aqui" ng-model="busca" ng-change="buscar(this)">
+                        </div>
+
+                        <nav class="text-left">
+                            <ul class="pager">
+                                <li ng-class="prevPageDisabled()"><a href ng-click="prevPage()">Anterior</a>
+                                </li>
+                                <li ng-class="nextPageDisabled()"><a href ng-click="nextPage()">Próximo</a>
+                                </li>
+                            </ul>
+                        </nav>
+
+                        <table class="table table-hover table-striped table-condensed">
+                            <thead>
+                                <tr>
+                                    <th style="width: 20px;">#</th>
+                                    <th style="width: 75px;">Código</th>
+                                    <th style="width: 100px;">Sigla</th>
+                                    <th>Nome</th>
+                                    <th style="width: 135px;">Turmas</th>
+                                    <th style="width: 100px;">Campus</th>
+                                    <th style="width: 75px;">Período</th>
+                                </tr>
+                            </thead>
+                            <tr ng-repeat="disciplina in resultados | offset: currentPage*itemsPerPage | limitTo: itemsPerPage" ng-class="classeDisciplina(this)">
+                                <td>
+                                    <input type="checkbox" ng-model="disciplina.escolhida" ng-change="checkboxClick(this)">
+                                </td>
+                                <td>{{ disciplina.codigo }}</td>
+                                <td>{{ disciplina.sigla }}</td>
+                                <td>{{ disciplina.nome }}</td>
+                                <td>{{ disciplina.turmas.join(', ') }}</td>
+                                <td>{{ disciplina.campus }}</td>
+                                <td>{{ disciplina.periodo }}</td>
+                            </tr>
+                        </table>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+    </div>
+
+    <script>
+    $('#grade').fullCalendar({
+        header: {
+            left: '',
+            center: '',
+            right: ''
+        },
+        lang: 'pt-br',
+        height: 'auto',
+        contentHeight: 300,
+
+        defaultView: 'agendaWeek',
+        firstDay: 1,
+        hiddenDays: [0],
+        allDaySlot: false,
+        minTime: '8:00:00',
+        maxTime: '23:30:00',
+        slotDuration: '01:00:00',
+        axisFormat: 'H:mm',
+        slotEventOverlap: false,
+        eventOverlap: false,
+
+        editable: false,
+        columnFormat: {
+            week: 'dddd'
+        },
+    });
+    </script>
+</body>
+
+</html>
