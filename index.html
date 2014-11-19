@@ -1,20 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
-    <title>UFABC - Grades</title>
+    <title>UFABC - Montador de Grades</title>
 
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
 
-    <link rel='stylesheet' href='fullcalendar-2.2.1/fullcalendar.css' />
-    <script src='fullcalendar-2.2.1/lib/jquery.min.js'></script>
-    <script src='fullcalendar-2.2.1/lib/moment.min.js'></script>
-    <script src='fullcalendar-2.2.1/fullcalendar.js'></script>
-    <script src='fullcalendar-2.2.1/lang/pt-br.js'></script>
+    <link rel='stylesheet' href='css/fullcalendar.min.css' />
+    <script src='js/jquery.min.js'></script>
+    <script src='js/moment.min.js'></script>
+    <script src='js/fullcalendar.min.js'></script>
+    <script src='js/fullcalendar.pt-br.js'></script>
 
-    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <script src="js/bootstrap.min.js"></script>
 
     <script src="http://matricula.ufabc.edu.br/cache/todasDisciplinas.js"></script>
     <script src="js/funcoes_disciplinas.js"></script>
@@ -40,7 +40,9 @@
             <p>Em desenvolvimento!</p>
         </div>
 
-        <h3>Sua grade <small>Total de créditos: {{ contarCreditos() }}</small></h3>
+        <h3>Sua grade
+            <small>Total de créditos: {{ contarCreditos() }}</small>
+        </h3>
 
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
             Selecionar disciplinas
@@ -105,11 +107,7 @@
                     </div>
                 </div>
             </div>
-
-
-
         </div>
-
     </div>
 
     <script>
