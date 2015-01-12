@@ -8,14 +8,25 @@ app.filter('offset', function() {
 });
 
 app.controller("MontadorController", function($scope, $http) {
-    $http.defaults.headers.put = {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, X-Requested-With'
-        };
 
     $scope.infoHelp = (function(){
-        console.log((new X2JS()).xml_str2json($http.get('ajax/lista-completa.xml')));  
+        $.ajax({
+                url: "ajax/lista-completa.xml",
+                dataType: "xml",
+                success: function( xmlResponse ) {
+                    var data = $( "r", xmlResponse ).map(function() { //r = resultado
+                        if($( "c", this ).text() != ""){ //c = codigo
+                            return {
+                                value: "(" + $( "c", this ).text() + ") "  + $( "n", this ).text(),
+                                id: $( "i", this ).text(), //i = id
+                                codigo: $( "c", this ).text(),
+                                tipo: $( "t", this ).text()
+                                
+                            };
+                        }
+                    }).get();
+                    console.log(data);
+                }});
     })();
     $scope.escolhidas = disciplinasEscolhidas;
     $scope.resultados = buscarDisciplinas();
