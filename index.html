@@ -18,6 +18,7 @@
 
     <script src="http://matricula.ufabc.edu.br/cache/todasDisciplinas.js"></script>
     <script src="js/funcoes_disciplinas.js"></script>
+    <script src="js/xml2json.min.js"></script>
     <script src="js/controller.js"></script>
 </head>
 
@@ -58,6 +59,10 @@
                             <span class="input-group-addon glyphicon glyphicon-search" aria-hidden="true"></span>
                             <input type="text" class="form-control" placeholder="Pesquise aqui" ng-model="busca" ng-change="buscar(this)">
                         </div>
+                        <div class="input-group pull-right">
+                                <input name="ocultar" ng-model="ocultar" ng-change="buscar(this)" type="checkbox" aria-label="...">
+                                <label for="ocultar">Ocultar turmas com conflitos.</label>
+                        </div>
 
                         <nav class="text-left">
                             <ul class="pager">
@@ -82,7 +87,7 @@
                             </thead>
                             <tr ng-repeat="disciplina in resultados | offset: currentPage*itemsPerPage | limitTo: itemsPerPage" ng-class="classeDisciplina(this)">
                                 <td>
-                                    <input type="checkbox" ng-model="disciplina.escolhida" ng-change="checkboxClick(this)">
+                                    <input type="checkbox" ng-model="disciplina.escolhida" ng-model-change ng-change="checkboxClick(this);buscar(this)">
                                 </td>
                                 <td>{{ disciplina.codigo }}</td>
                                 <td>{{ disciplina.sigla }}</td>

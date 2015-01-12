@@ -7,12 +7,32 @@ app.filter('offset', function() {
     };
 });
 
-app.controller("MontadorController", function($scope) {
+app.controller("MontadorController", function($scope, $http) {
+    $http.defaults.headers.put = {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, X-Requested-With'
+        };
 
+    $scope.infoHelp = (function(){
+        console.log((new X2JS()).xml_str2json($http.get('ajax/lista-completa.xml')));  
+    })();
     $scope.escolhidas = disciplinasEscolhidas;
     $scope.resultados = buscarDisciplinas();
+    $scope.ocultar = true;
     $scope.buscar = function(e) {
-        $scope.resultados = buscarDisciplinas(e.busca);
+        var busca = buscarDisciplinas(e.busca);
+        if ($scope.ocultar) {
+            $scope.resultados = [];
+            for(var i in busca) {
+                console.log($scope.classeDisciplina({disciplina: busca[i]}));
+                if ($scope.classeDisciplina({disciplina: busca[i]}) != 'danger') {
+                    $scope.resultados.push(busca[i]);
+                }
+            }
+        } else {
+            $scope.resultados = busca;
+        }
         $scope.setPage(0);
     };
 
