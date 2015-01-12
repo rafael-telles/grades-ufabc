@@ -1,3 +1,34 @@
+var helpData = (function() {
+    var ret = {};
+    $.ajax({
+        url: "ajax/lista-completa.xml",
+        dataType: "xml",
+        async: false,
+        success: function(xmlResponse) {
+            ret = $("r", xmlResponse).map(function() { //r = resultado
+                if ($("c", this).text() != "") { //c = codigo
+                    return {
+                        value: "(" + $("c", this).text() + ") " + $("n", this).text(),
+                        id: $("i", this).text(), //i = id
+                        codigo: $("c", this).text(),
+                        tipo: $("t", this).text()
+
+                    };
+                }
+            }).get();
+        }
+    });
+    return ret;
+})();
+
+var linkHelp = function(d) {
+    for (var i in $scope.helpData) {
+        if ($scope.helpData[i].codigo == d.codigo) {
+            return 'http://www.ufabchelp.me/painel/disciplina.php?i=' + $scope.helpData[i].id;
+        }
+    }
+};
+
 var app = angular.module("MontadorDeGrades", []);
 
 app.filter('offset', function() {
@@ -8,29 +39,6 @@ app.filter('offset', function() {
 });
 
 app.controller("MontadorController", function($scope, $http) {
-
-    $scope.helpData = (function() {
-        var ret = {};
-        $.ajax({
-            url: "ajax/lista-completa.xml",
-            dataType: "xml",
-            async: false,
-            success: function(xmlResponse) {
-                ret = $("r", xmlResponse).map(function() { //r = resultado
-                    if ($("c", this).text() != "") { //c = codigo
-                        return {
-                            value: "(" + $("c", this).text() + ") " + $("n", this).text(),
-                            id: $("i", this).text(), //i = id
-                            codigo: $("c", this).text(),
-                            tipo: $("t", this).text()
-
-                        };
-                    }
-                }).get();
-            }
-        });
-        return ret;
-    })();
 
     $scope.escolhidas = disciplinasEscolhidas;
     $scope.resultados = buscarDisciplinas();
@@ -137,11 +145,7 @@ app.controller("MontadorController", function($scope, $http) {
     };
 
     $scope.linkHelp = function(e) {
-        for(var i in $scope.helpData) {
-            if($scope.helpData[i].codigo == e.disciplina.codigo) {
-                return 'http://www.ufabchelp.me/painel/disciplina.php?i='+$scope.helpData[i].id;
-            }
-        }
+        linkHelp(e.disciplina);
     }
 
     $scope.contarCreditos = function() {

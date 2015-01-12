@@ -145,6 +145,7 @@ var atualizarGrade = function() {
 
             $('#grade').fullCalendar('renderEvent', {
                 title: d.nome,
+                url: linkHelp(d),
                 start: inicio,
                 end: fim,
             });
