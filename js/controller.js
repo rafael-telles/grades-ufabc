@@ -22,9 +22,9 @@ var helpData = (function() {
 })();
 
 var linkHelp = function(d) {
-    for (var i in $scope.helpData) {
-        if ($scope.helpData[i].codigo == d.codigo) {
-            return 'http://www.ufabchelp.me/painel/disciplina.php?i=' + $scope.helpData[i].id;
+    for (var i in helpData) {
+        if (helpData[i].codigo == d.codigo) {
+            return 'http://www.ufabchelp.me/painel/disciplina.php?i=' + helpData[i].id;
         }
     }
 };
