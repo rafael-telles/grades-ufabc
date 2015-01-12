@@ -9,25 +9,29 @@ app.filter('offset', function() {
 
 app.controller("MontadorController", function($scope, $http) {
 
-    $scope.infoHelp = (function(){
+    $scope.helpData = (function() {
+        var ret = {};
         $.ajax({
-                url: "ajax/lista-completa.xml",
-                dataType: "xml",
-                success: function( xmlResponse ) {
-                    var data = $( "r", xmlResponse ).map(function() { //r = resultado
-                        if($( "c", this ).text() != ""){ //c = codigo
-                            return {
-                                value: "(" + $( "c", this ).text() + ") "  + $( "n", this ).text(),
-                                id: $( "i", this ).text(), //i = id
-                                codigo: $( "c", this ).text(),
-                                tipo: $( "t", this ).text()
-                                
-                            };
-                        }
-                    }).get();
-                    console.log(data);
-                }});
+            url: "ajax/lista-completa.xml",
+            dataType: "xml",
+            async: false,
+            success: function(xmlResponse) {
+                ret = $("r", xmlResponse).map(function() { //r = resultado
+                    if ($("c", this).text() != "") { //c = codigo
+                        return {
+                            value: "(" + $("c", this).text() + ") " + $("n", this).text(),
+                            id: $("i", this).text(), //i = id
+                            codigo: $("c", this).text(),
+                            tipo: $("t", this).text()
+
+                        };
+                    }
+                }).get();
+            }
+        });
+        return ret;
     })();
+
     $scope.escolhidas = disciplinasEscolhidas;
     $scope.resultados = buscarDisciplinas();
     $scope.ocultar = true;
@@ -35,9 +39,13 @@ app.controller("MontadorController", function($scope, $http) {
         var busca = buscarDisciplinas(e.busca);
         if ($scope.ocultar) {
             $scope.resultados = [];
-            for(var i in busca) {
-                console.log($scope.classeDisciplina({disciplina: busca[i]}));
-                if ($scope.classeDisciplina({disciplina: busca[i]}) != 'danger') {
+            for (var i in busca) {
+                console.log($scope.classeDisciplina({
+                    disciplina: busca[i]
+                }));
+                if ($scope.classeDisciplina({
+                        disciplina: busca[i]
+                    }) != 'danger') {
                     $scope.resultados.push(busca[i]);
                 }
             }
@@ -117,23 +125,31 @@ app.controller("MontadorController", function($scope, $http) {
     };
 
     $scope.classeDisciplina = function(e) {
-        for(var i in disciplinasEscolhidas) {
-            if(e.disciplina == disciplinasEscolhidas[i]) {
+        for (var i in disciplinasEscolhidas) {
+            if (e.disciplina == disciplinasEscolhidas[i]) {
                 return "success";
             }
-            if(verificarConflito(e.disciplina, disciplinasEscolhidas[i])) {
+            if (verificarConflito(e.disciplina, disciplinasEscolhidas[i])) {
                 return "danger";
             }
         }
         return "";
     };
 
+    $scope.linkHelp = function(e) {
+        for(var i in $scope.helpData) {
+            if($scope.helpData[i].codigo == e.disciplina.codigo) {
+                return 'http://www.ufabchelp.me/painel/disciplina.php?i='+$scope.helpData[i].id;
+            }
+        }
+    }
+
     $scope.contarCreditos = function() {
         var ret = 0;
-        for(var i in disciplinasEscolhidas) {
+        for (var i in disciplinasEscolhidas) {
             ret += disciplinasEscolhidas[i].creditos;
         }
-        
+
         return ret;
     }
 });

@@ -91,7 +91,7 @@
                                 </td>
                                 <td>{{ disciplina.codigo }}</td>
                                 <td>{{ disciplina.sigla }}</td>
-                                <td>{{ disciplina.nome }}</td>
+                                <td><a href="{{ linkHelp(this) }}">{{ disciplina.nome }}<a></td>
                                 <td>{{ disciplina.turmas.join(', ') }}</td>
                                 <td>{{ disciplina.campus }}</td>
                                 <td>{{ disciplina.periodo }}</td>
