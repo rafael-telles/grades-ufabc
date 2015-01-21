@@ -20,6 +20,19 @@
     <script src="js/funcoes_disciplinas.js"></script>
     <script src="js/xml2json.min.js"></script>
     <script src="js/controller.js"></script>
+
+    <style>
+    .table-container {
+        height: 300px;
+        overflow-y: scroll;
+        clear: both;
+    }
+    .grade {
+        width: 50%;
+        margin: -1px;
+        display: inline-block;
+    }
+    </style>
 </head>
 
 <body ng-app="MontadorDeGrades" ng-controller="MontadorController">
@@ -40,7 +53,10 @@
         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
             Selecionar disciplinas
         </button>
-        <div id='grade'></div>
+        <div class="grade-container">
+            <div class="grade" id='grade-a'></div>
+            <div class="grade" id='grade-b'></div>
+        </div>
 
 
         <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -60,46 +76,42 @@
                             <input type="text" class="form-control" placeholder="Pesquise aqui" ng-model="busca" ng-change="buscar(this)">
                         </div>
                         <div class="input-group pull-right">
-                                <input name="ocultar" ng-model="ocultar" ng-change="buscar(this)" type="checkbox" aria-label="...">
-                                <label for="ocultar">Ocultar turmas com conflitos.</label>
+                            <input name="ocultar" ng-model="ocultar" ng-change="buscar(this)" type="checkbox" aria-label="...">
+                            <label for="ocultar">Ocultar turmas com conflitos.</label>
                         </div>
 
-                        <nav class="text-left">
-                            <ul class="pager">
-                                <li ng-class="prevPageDisabled()"><a href ng-click="prevPage()">Anterior</a>
-                                </li>
-                                <li ng-class="nextPageDisabled()"><a href ng-click="nextPage()">Próximo</a>
-                                </li>
-                            </ul>
-                        </nav>
-
-                        <table class="table table-hover table-striped table-condensed">
-                            <thead>
-                                <tr>
-                                    <th style="width: 20px;">#</th>
-                                    <th style="width: 75px;">Código</th>
-                                    <th style="width: 100px;">Sigla</th>
-                                    <th>Nome</th>
-                                    <th style="width: 135px;">Turmas</th>
-                                    <th style="width: 100px;">Campus</th>
-                                    <th style="width: 75px;">Período</th>
-                                </tr>
-                            </thead>
-                            <tr ng-repeat="disciplina in resultados | offset: currentPage*itemsPerPage | limitTo: itemsPerPage" ng-class="classeDisciplina(this)">
-                                <td>
-                                    <input type="checkbox" ng-model="disciplina.escolhida" ng-model-change ng-change="checkboxClick(this);buscar(this)">
-                                </td>
-                                <td>{{ disciplina.codigo }}</td>
-                                <td>{{ disciplina.sigla }}</td>
-                                <td><a target="_blank" href="{{ linkHelp(disciplina) }}">{{ disciplina.nome }}<a></td>
-                                <td>{{ disciplina.turmas.join(', ') }}</td>
-                                <td>{{ disciplina.campus }}</td>
-                                <td>{{ disciplina.periodo }}</td>
-                            </tr>
-                        </table>
-
+                        <div class="table-container">
+                            <table class="table table-hover table-striped table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 20px;">#</th>
+                                        <th style="width: 75px;">Código</th>
+                                        <th style="width: 100px;">Sigla</th>
+                                        <th>Nome</th>
+                                        <th style="width: 135px;">Turmas</th>
+                                        <th style="width: 100px;">Campus</th>
+                                        <th style="width: 75px;">Período</th>
+                                    </tr>
+                                </thead>
+                                <tbody style="overflow-y: scroll; height: 300px">
+                                    <tr ng-repeat="disciplina in resultados" ng-class="classeDisciplina(this)">
+                                        <td>
+                                            <input type="checkbox" ng-model="disciplina.escolhida" ng-model-change ng-change="checkboxClick(this);buscar(this)">
+                                        </td>
+                                        <td>{{ disciplina.codigo }}</td>
+                                        <td>{{ disciplina.sigla }}</td>
+                                        <td><a target="_blank" href="{{ linkHelp(disciplina) }}">{{ disciplina.nome }}</a>
+                                        </td>
+                                        <td>{{ disciplina.turmas.join(', ') }}</td>
+                                        <td>{{ disciplina.campus }}</td>
+                                        <td>{{ disciplina.periodo }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                     <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" ng-click="limparGrade()">Limpar</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
                     </div>
                 </div>
@@ -107,13 +119,13 @@
         </div>
     </div>
 
-    <footer class="text-right" style="position: absolute;  bottom: 0;  right: 0.5em;  height: 1.5em;">
-        <small><a href>© 2014 Rafael Telles</a>
-        </small>
+    <footer class="text-right" style="position: fixed;  bottom: 0;  right: 0.5em;  height: 1.5em;">
+        <small><a href>© 2015 Rafael Telles</a>
+                                        </small>
     </footer>
 
     <script>
-    $('#grade').fullCalendar({
+    $('.grade').fullCalendar({
         header: {
             left: '',
             center: '',
@@ -139,6 +151,8 @@
             week: 'dddd'
         },
     });
+
+    resgatarHash();
     </script>
 </body>
 

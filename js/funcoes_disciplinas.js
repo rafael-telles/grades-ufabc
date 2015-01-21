@@ -1,8 +1,8 @@
-var processarDisciplinas = function(todasDisciplinas) {
+var processarDisciplinas = function(ds) {
     var ret = [];
 
-    for (var i in todasDisciplinas) {
-        var d = todasDisciplinas[i];
+    for (var i in ds) {
+        var d = ds[i];
         completarDisciplina(d);
 
         var temDuplicata = false;
@@ -49,6 +49,7 @@ var completarDisciplina = function(d) {
 
     d.descricao = (d.codigo + ' ' + d.nome + ' ' + d.sigla + ' ' + d.turmas.join(', ') + ' ' + d.periodo + ' ' + d.campus).toUpperCase();
     d.descricao = normalizarTexto(d.descricao);
+    
 };
 
 var verificarDuplicata = function(d1, d2) {
@@ -118,8 +119,30 @@ var normalizarTexto = function(texto) {
 var todasDisciplinas = processarDisciplinas(todasDisciplinas);
 var disciplinasEscolhidas = [];
 
+var atualizarHash = function() {
+    var ids = $.map(disciplinasEscolhidas, function(el, i) {
+        return todasDisciplinas.indexOf(el);
+    });
+    window.location.hash = ids.join(',');
+}
+
+var resgatarHash = function() {
+    var ids = window.location.hash.substring(1).split(',');
+    disciplinasEscolhidas = [];
+    for (var i in ids) {
+        var d = todasDisciplinas[ids[i]];
+        if (d) {
+            disciplinasEscolhidas.push(d);
+            d.escolhida = true;
+        }
+    }
+    atualizarGrade();
+}
+
 var atualizarGrade = function() {
-    $('#grade').fullCalendar('removeEvents');
+    atualizarHash();
+
+    $('.grade').fullCalendar('removeEvents');
 
     for (var i in disciplinasEscolhidas) {
         var d = disciplinasEscolhidas[i];
@@ -137,8 +160,10 @@ var atualizarGrade = function() {
                 .minutes(parseInt(h.horas[h.horas.length - 1].split(':')[1]) + 30)
                 .seconds(0)
                 .toISOString();
-
-            $('#grade').fullCalendar('renderEvent', {
+            var grade = $('.grade');
+            if (h.periodicidade_extenso === " - quinzenal (I)") grade = $("#grade-a");
+            if (h.periodicidade_extenso === " - quinzenal (II)") grade = $("#grade-b");
+            grade.fullCalendar('renderEvent', {
                 title: d.nome,
                 url: linkHelp(d),
                 start: inicio,
