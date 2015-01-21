@@ -48,12 +48,7 @@ app.controller("MontadorController", function($scope, $http) {
         if ($scope.ocultar) {
             $scope.resultados = [];
             for (var i in busca) {
-                console.log($scope.classeDisciplina({
-                    disciplina: busca[i]
-                }));
-                if ($scope.classeDisciplina({
-                        disciplina: busca[i]
-                    }) != 'danger') {
+                if ($scope.classeDisciplina({ disciplina: busca[i] }) != 'danger') {
                     $scope.resultados.push(busca[i]);
                 }
             }
@@ -144,8 +139,8 @@ app.controller("MontadorController", function($scope, $http) {
         return "";
     };
 
-    $scope.linkHelp = function(e) {
-        linkHelp(e.disciplina);
+    $scope.linkHelp = function(d) {
+        return linkHelp(d);
     }
 
     $scope.contarCreditos = function() {

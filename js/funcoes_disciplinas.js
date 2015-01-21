@@ -30,10 +30,10 @@ var completarDisciplina = function(d) {
     d.periodo = match[3];
     d.campus = match[4];
 
-    for(var i in d.horarios) {
+    for (var i in d.horarios) {
         var h = d.horarios[i];
         h.horas.pop();
-        if(h.semana == 6) {
+        if (h.semana == 6) {
             h.semana = 0;
         }
     }
@@ -121,12 +121,8 @@ var disciplinasEscolhidas = [];
 var atualizarGrade = function() {
     $('#grade').fullCalendar('removeEvents');
 
-
-    var qntCreditos = 0;
     for (var i in disciplinasEscolhidas) {
         var d = disciplinasEscolhidas[i];
-
-        qntCreditos += d.creditos;
 
         for (var j in d.horarios) {
             var h = d.horarios[j];
@@ -141,7 +137,6 @@ var atualizarGrade = function() {
                 .minutes(parseInt(h.horas[h.horas.length - 1].split(':')[1]) + 30)
                 .seconds(0)
                 .toISOString();
-            console.log(inicio + ' - ' + fim);
 
             $('#grade').fullCalendar('renderEvent', {
                 title: d.nome,
@@ -151,6 +146,4 @@ var atualizarGrade = function() {
             });
         }
     }
-
-    $('#creditos')[0].innerHTML = qntCreditos;
 }
