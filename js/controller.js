@@ -34,7 +34,6 @@ var app = angular.module("MontadorDeGrades", []);
 app.controller("MontadorController", function($scope, $http) {
 
     $scope.escolhidas = disciplinasEscolhidas;
-    $scope.resultados = buscarDisciplinas();
     $scope.ocultar = true;
     $scope.buscar = function(e) {
         var busca = buscarDisciplinas(e.busca);
@@ -51,6 +50,7 @@ app.controller("MontadorController", function($scope, $http) {
             $scope.resultados = busca;
         }
     };
+    $scope.resultados = [];
 
     $scope.checkboxClick = function(e) {
         if (e.disciplina.escolhida) {
@@ -81,6 +81,10 @@ app.controller("MontadorController", function($scope, $http) {
     $scope.linkHelp = function(d) {
         return linkHelp(d);
     }
+    
+    $scope.gerarCor = function(i) {
+        return gerarCor(i);
+    }
 
     $scope.contarCreditos = function() {
         var ret = 0;
@@ -100,4 +104,6 @@ app.controller("MontadorController", function($scope, $http) {
 
         atualizarGrade();
     }
+    
+    $scope.buscar({busca:''});
 });

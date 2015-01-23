@@ -32,6 +32,25 @@
         margin: -1px;
         display: inline-block;
     }
+        
+    .fc-event-container {
+        margin: 0 !important;
+    }
+        
+    .fc-event {
+        margin: 0.5px 0;
+        border: 0;
+        border-radius: 0;
+    }
+        
+    .fc-time {
+        font-size: 0.65em !important;
+    }
+        
+    .fc-title {
+        font-size: 1.5em;
+    }
+        
     </style>
 </head>
 
@@ -41,22 +60,35 @@
             <div class="navbar-header">
                 <a class="navbar-brand" href="#">UFABC - Montador de Grades</a>
             </div>
+            
+            <div class="collapse navbar-collapse navbar-right">
+                <ul class="nav navbar-nav">
+                    <li><p class="navbar-text">Total de créditos: {{ contarCreditos() }}</p></li>
+                    <li>
+                            <button id="selecionar-btn" type="button" class="btn btn-primary navbar-btn" data-toggle="modal" data-target="#myModal">
+                                Selecionar disciplinas
+                            </button>
+                    </li>
+                </ul>
+            </div>
+          
         </div>
     </nav>
 
     <div class="container" style="position:relative; top: 60px;">
 
-        <h3>Sua grade
-            <small>Total de créditos: {{ contarCreditos() }}</small>
-        </h3>
-
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
-            Selecionar disciplinas
-        </button>
         <div class="grade-container">
             <div class="grade" id='grade-a'></div>
             <div class="grade" id='grade-b'></div>
         </div>
+        <table class="table">
+            <tr ng-repeat="disciplina in escolhidas" >
+                <td style='background: {{ gerarCor($index) }}; width: 32px'></td>
+                <td>{{ disciplina.codigo }}</td>
+                <td>{{ disciplina.nome }} - {{ disciplina.turmas.join(', ') }}</td>
+                <td></td>
+            </tr>
+        </table>
 
 
         <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -124,7 +156,8 @@
                                         </small>
     </footer>
 
-    <script>
+    <script> 
+        
     $('.grade').fullCalendar({
         header: {
             left: '',
@@ -148,7 +181,7 @@
 
         editable: false,
         columnFormat: {
-            week: 'dddd'
+            week: 'ddd'
         },
     });
 

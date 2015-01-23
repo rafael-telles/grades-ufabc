@@ -1,4 +1,4 @@
-var processarDisciplinas = function(ds) {
+var processarDisciplinas = function (ds) {
     var ret = [];
 
     for (var i in ds) {
@@ -49,7 +49,7 @@ var completarDisciplina = function(d) {
 
     d.descricao = (d.codigo + ' ' + d.nome + ' ' + d.sigla + ' ' + d.turmas.join(', ') + ' ' + d.periodo + ' ' + d.campus).toUpperCase();
     d.descricao = normalizarTexto(d.descricao);
-    
+        
 };
 
 var verificarDuplicata = function(d1, d2) {
@@ -103,6 +103,20 @@ var verificarConflito = function(d1, d2) {
         }
     }
     return false;
+}
+
+var gerarCor = function(i) {
+    return ['#F44336', //Red
+            '#9C27B0', //Purple
+            '#009688', //Teal
+            '#8BC34A', //Light Green
+            '#607D8B', //Blue Grey
+            '#FF5722', //Deep Orange
+            '#4CAF50', //Green
+            '#03A9F4', //Light Blue
+            '#E91E63', //Pink
+            '#795548', //Brown
+           ][i];
 }
 
 var normalizarTexto = function(texto) {
@@ -164,10 +178,11 @@ var atualizarGrade = function() {
             if (h.periodicidade_extenso === " - quinzenal (I)") grade = $("#grade-a");
             if (h.periodicidade_extenso === " - quinzenal (II)") grade = $("#grade-b");
             grade.fullCalendar('renderEvent', {
-                title: d.nome,
+                title: d.sigla,
                 url: linkHelp(d),
                 start: inicio,
                 end: fim,
+                color: gerarCor(i)
             });
         }
     }
