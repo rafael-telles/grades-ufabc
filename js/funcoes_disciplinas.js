@@ -53,10 +53,11 @@ var completarDisciplina = function(d) {
 };
 
 var verificarDuplicata = function(d1, d2) {
-    return d1.codigo == d2.codigo &&
+    return false;
+    /* return d1.codigo == d2.codigo &&
         d1.turno == d2.turno &&
         d1.campus == d2.campus &&
-        JSON.stringify(d1.horarios) == JSON.stringify(d2.horarios);
+        JSON.stringify(d1.horarios) == JSON.stringify(d2.horarios); */
 };
 
 var buscarDisciplinas = function(termo) {
