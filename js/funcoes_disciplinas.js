@@ -143,7 +143,7 @@ var atualizarHash = function() {
 
 var resgatarHash = function() {
     var ids = window.location.hash.substring(1).split(',');
-    disciplinasEscolhidas = [];
+    disciplinasEscolhidas.length = 0;
     for (var i in ids) {
         var d = todasDisciplinas[ids[i]];
         if (d) {

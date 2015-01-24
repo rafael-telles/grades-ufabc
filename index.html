@@ -7,13 +7,13 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
 
-    <link rel='stylesheet' href='css/fullcalendar.min.css' />
+    <link rel='stylesheet' href='css/fullcalendar.min.css' media="all"/>
     <script src='js/jquery.min.js'></script>
     <script src='js/moment.min.js'></script>
     <script src='js/fullcalendar.min.js'></script>
     <script src='js/fullcalendar.pt-br.js'></script>
 
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet" media="all">
     <script src="js/bootstrap.min.js"></script>
 
     <script src="http://matricula.ufabc.edu.br/cache/todasDisciplinas.js"></script>
@@ -27,11 +27,8 @@
         overflow-y: scroll;
         clear: both;
     }
-    .grade {
-        width: 50%;
-        margin: -1px;
-        display: inline-block;
-    }
+
+    .fc-toolbar { display: none;}
         
     .fc-event-container {
         margin: 0 !important;
@@ -50,7 +47,13 @@
     .fc-title {
         font-size: 1.5em;
     }
-        
+    
+    @media screen and (max-width:767px){
+        .grade-container {
+            width: 100%;
+            display: block;
+        }
+    } 
     </style>
 </head>
 
@@ -77,16 +80,24 @@
 
     <div class="container" style="position:relative; top: 60px;">
 
-        <div class="grade-container">
-            <div class="grade" id='grade-a'></div>
-            <div class="grade" id='grade-b'></div>
+        <div class="row">
+            <div class="grade-container col-xs-6">
+            <h3>Semana A</h3>
+                <div class="grade" id='grade-a'></div>
+            </div>
+            <div class="grade-container col-xs-6">
+            <h3>Semana B</h3>
+                <div class="grade" id='grade-b'></div>
+            </div>
         </div>
+        <h3>Suas disciplinas</h3>
         <table class="table">
             <tr ng-repeat="disciplina in escolhidas" >
                 <td style='background: {{ gerarCor($index) }}; width: 32px'></td>
                 <td>{{ disciplina.codigo }}</td>
                 <td>{{ disciplina.nome }} - {{ disciplina.turmas.join(', ') }}</td>
                 <td></td>
+                <td style="width: 18px;"><a ng-click="removerDisciplina($index)"><span class="glyphicon glyphicon-remove"></span></a></td>
             </tr>
         </table>
 
@@ -166,7 +177,6 @@
         },
         lang: 'pt-br',
         height: 'auto',
-        contentHeight: 300,
 
         defaultView: 'agendaWeek',
         firstDay: 1,

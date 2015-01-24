@@ -81,7 +81,7 @@ app.controller("MontadorController", function($scope, $http) {
     $scope.linkHelp = function(d) {
         return linkHelp(d);
     }
-    
+
     $scope.gerarCor = function(i) {
         return gerarCor(i);
     }
@@ -104,6 +104,17 @@ app.controller("MontadorController", function($scope, $http) {
 
         atualizarGrade();
     }
-    
-    $scope.buscar({busca:''});
+
+    $scope.removerDisciplina = function(d) {
+        disciplinasEscolhidas.splice(d, 1);
+        atualizarGrade();
+    }
+
+    $scope.buscar({
+        busca: ''
+    });
+
+    $(window).on('hashchange', function() {
+        $scope.$apply(function(){resgatarHash();});
+    });
 });
