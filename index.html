@@ -136,7 +136,7 @@
             <tr ng-repeat="disciplina in escolhidas">
                 <td style='background: {{ gerarCor($index) }}; width: 32px'></td>
                 <td>{{ disciplina.codigo }}</td>
-                <td><a href="{{ linkHelp(disciplina) ">{{ disciplina.nome }}</a> - {{ disciplina.turmas.join(', ') }} ({{ disciplina.campus }})</td>
+                <td><a href="{{ linkHelp(disciplina) }}">{{ disciplina.nome }}</a> - {{ disciplina.turmas.join(', ') }} ({{ disciplina.campus }})</td>
                 <td style="width: 18px;"><a ng-click="removerDisciplina($index)"><span class="no-print glyphicon glyphicon-remove"></span></a>
                 </td>
             </tr>
