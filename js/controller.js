@@ -1,56 +1,41 @@
-var helpData = (function() {
-    var ret = {};
-    $.ajax({
-        url: "ajax/lista-completa.xml",
-        dataType: "xml",
-        async: false,
-        success: function(xmlResponse) {
-            ret = $("r", xmlResponse).map(function() { //r = resultado
-                if ($("c", this).text() != "") { //c = codigo
-                    return {
-                        value: "(" + $("c", this).text() + ") " + $("n", this).text(),
-                        id: $("i", this).text(), //i = id
-                        codigo: $("c", this).text(),
-                        tipo: $("t", this).text()
-
-                    };
-                }
-            }).get();
-        }
-    });
-    return ret;
-})();
-
-var linkHelp = function(d) {
-    for (var i in helpData) {
-        if (helpData[i].codigo == d.codigo) {
-            return 'http://www.ufabchelp.me/painel/disciplina.php?i=' + helpData[i].id;
-        }
-    }
-};
-
 var app = angular.module("MontadorDeGrades", []);
 
 app.controller("MontadorController", function($scope, $http) {
 
     $scope.escolhidas = disciplinasEscolhidas;
     $scope.ocultar = true;
+    $scope.todosResultados = [];
+    $scope.resultados = [];
     $scope.buscar = function(e) {
+        $scope.numItems = 10;
         var busca = buscarDisciplinas(e.busca);
         if ($scope.ocultar) {
-            $scope.resultados = [];
+            $scope.todosResultados = [];
             for (var i in busca) {
                 if ($scope.classeDisciplina({
                         disciplina: busca[i]
                     }) != 'danger') {
-                    $scope.resultados.push(busca[i]);
+                    $scope.todosResultados.push(busca[i]);
                 }
             }
         } else {
-            $scope.resultados = busca;
+            $scope.todosResultados = busca;
         }
+
+        $scope.carregarMais();
     };
-    $scope.resultados = [];
+
+    $scope.carregarMais = function() {
+        $scope.numItems += 10;
+        if($scope.numItems >= $scope.todosResultados.length) {
+            $scope.numItems = $scope.todosResultados.length;
+        }
+        $scope.resultados = []
+        for(var i = 0; i < $scope.numItems; i++) {
+            $scope.resultados[i] = $scope.todosResultados[i];
+        }
+        console.log($scope.numItems,$scope.todosResultados.length,$scope.resultados.length);
+    }
 
     $scope.checkboxClick = function(e) {
         if (e.disciplina.escolhida) {
@@ -117,4 +102,16 @@ app.controller("MontadorController", function($scope, $http) {
     $(window).on('hashchange', function() {
         $scope.$apply(function(){resgatarHash();});
     });
+});
+
+app.directive('whenScrolled', function() {
+    return function(scope, elm, attr) {
+        var raw = elm[0];
+        
+        elm.bind('scroll', function() {
+            if (raw.scrollTop + raw.offsetHeight >= raw.scrollHeight) {
+                scope.$apply(attr.whenScrolled);
+            }
+        });
+    };
 });

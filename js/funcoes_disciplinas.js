@@ -63,11 +63,10 @@ var verificarDuplicata = function(d1, d2) {
 var buscarDisciplinas = function(termo) {
     termo = termo || '';
     termo = normalizarTexto(termo);
-    var partes = termo.split(" ");
-    var ret = [];
-    for (var i in todasDisciplinas) {
-        var encontrou = true;
-        for (var j in partes) {
+    var partes = termo.split(" "), ret = [], i, j, encontrou;
+    for (i = 0; i < todasDisciplinas.length; i++) {
+        encontrou = true;
+        for (j = 0; j < partes.length; j++) {
             if (todasDisciplinas[i].descricao.indexOf(partes[j]) == -1) {
                 encontrou = false;
                 break;

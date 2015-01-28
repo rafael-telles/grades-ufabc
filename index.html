@@ -4,20 +4,21 @@
 <head>
     <meta charset="UTF-8">
     <title>UFABC - Montador de Grades</title>
+    <link rel='stylesheet' href='css/fullcalendar.min.css' media="all" />
+    <link href="css/bootstrap.min.css" rel="stylesheet" media="all" />
 
+    <script src='js/jquery.min.js'></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
 
-    <link rel='stylesheet' href='css/fullcalendar.min.css' media="all" />
-    <script src='js/jquery.min.js'></script>
     <script src='js/moment.min.js'></script>
     <script src='js/fullcalendar.min.js'></script>
     <script src='js/fullcalendar.pt-br.js'></script>
 
-    <link href="css/bootstrap.min.css" rel="stylesheet" media="all">
     <script src="js/bootstrap.min.js"></script>
 
     <script src="http://matricula.ufabc.edu.br/cache/todasDisciplinas.js"></script>
     <script src="js/funcoes_disciplinas.js"></script>
+    <script src="js/integracao_help.js"></script>
     <script src="js/xml2json.min.js"></script>
     <script src="js/controller.js"></script>
 
@@ -40,10 +41,14 @@
     }
     .fc-time {
         font-size: 0.65em !important;
+        color: rgba(255,255,255,0.5);
     }
     .fc-title {
         font-size: 1.5em;
+        text-align: center;
     }
+
+
     @media screen and (max-width: 1200px) {
         .grade-container {
             width: 100%;
@@ -128,8 +133,8 @@
                             <label for="ocultar">Ocultar turmas com conflitos.</label>
                         </div>
 
-                        <div class="table-container">
-                            <table class="table table-hover table-striped table-condensed">
+                        <div class="table-container" when-scrolled='carregarMais()'>
+                            <table class="table table-hover table-striped table-condensed" >
                                 <thead>
                                     <tr>
                                         <th style="width: 20px;">#</th>
