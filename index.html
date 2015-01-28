@@ -53,6 +53,9 @@
         font-size: 1.5em;
         text-align: center;
     }
+    .lista-disciplinas a {
+        text-decoration: none;
+    }
     @media screen and (max-width: 1200px) {
         .grade-container {
             width: 100%;
@@ -129,12 +132,11 @@
             </div>
         </div>
         <h3>Suas disciplinas</h3>
-        <table class="table">
+        <table class="lista-disciplinas table">
             <tr ng-repeat="disciplina in escolhidas">
                 <td style='background: {{ gerarCor($index) }}; width: 32px'></td>
                 <td>{{ disciplina.codigo }}</td>
-                <td>{{ disciplina.nome }} - {{ disciplina.turmas.join(', ') }}</td>
-                <td></td>
+                <td><a href="{{ linkHelp(disciplina) ">{{ disciplina.nome }}</a> - {{ disciplina.turmas.join(', ') }} ({{ disciplina.campus }})</td>
                 <td style="width: 18px;"><a ng-click="removerDisciplina($index)"><span class="no-print glyphicon glyphicon-remove"></span></a>
                 </td>
             </tr>
