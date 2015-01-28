@@ -23,6 +23,10 @@
     <script src="js/controller.js"></script>
 
     <style>
+    .resumo {
+        position:relative;
+        top: 50px;
+    }
     .table-container {
         height: 300px;
         overflow-y: scroll;
@@ -43,25 +47,45 @@
         font-size: 0.7em !important;
     }
     .fc-content .fc-time {
-        color: rgba(255,255,255,0.5);
+        color: rgba(255, 255, 255, 0.5);
     }
     .fc-title {
         font-size: 1.5em;
         text-align: center;
     }
-
-
     @media screen and (max-width: 1200px) {
         .grade-container {
             width: 100%;
             display: block;
         }
     }
+    @media print {
+        @page {
+            size: landscape;
+            margin: 0;
+        }
+        .no-print {
+            display: none;
+        }
+        .resumo {
+            background-color: white;
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            margin: 0;
+            page-break-after: always;
+        }
+        .fc-today {
+            background: white !important;
+        }
+    }
     </style>
 </head>
 
 <body ng-app="MontadorDeGrades" ng-controller="MontadorController">
-    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <nav class="no-print navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar" aria-expanded="true" aria-controls="navbar">
@@ -89,7 +113,7 @@
 
     </nav>
 
-    <div class="container" style="position:relative; top: 60px;">
+    <div class="container resumo">
 
         <div class="row">
             <div class="grade-container col-xs-6">
@@ -108,67 +132,66 @@
                 <td>{{ disciplina.codigo }}</td>
                 <td>{{ disciplina.nome }} - {{ disciplina.turmas.join(', ') }}</td>
                 <td></td>
-                <td style="width: 18px;"><a ng-click="removerDisciplina($index)"><span class="glyphicon glyphicon-remove"></span></a>
+                <td style="width: 18px;"><a ng-click="removerDisciplina($index)"><span class="no-print glyphicon glyphicon-remove"></span></a>
                 </td>
             </tr>
         </table>
+    </div>
 
+    <div id="myModal" class="no-print modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 
-        <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">
-                            <span aria-hidden="true">&times;</span>
-                            <span class="sr-only">Fechar</span>
-                        </button>
-                        <h4 class="modal-title" id="myModalLabel">Selecione suas disciplinas</h4>
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                        <span class="sr-only">Fechar</span>
+                    </button>
+                    <h4 class="modal-title" id="myModalLabel">Selecione suas disciplinas</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group input-group-lg">
+                        <span class="input-group-addon glyphicon glyphicon-search" aria-hidden="true"></span>
+                        <input type="text" class="form-control" placeholder="Pesquise aqui" ng-model="busca" ng-change="buscar(this)">
                     </div>
-                    <div class="modal-body">
-                        <div class="input-group input-group-lg">
-                            <span class="input-group-addon glyphicon glyphicon-search" aria-hidden="true"></span>
-                            <input type="text" class="form-control" placeholder="Pesquise aqui" ng-model="busca" ng-change="buscar(this)">
-                        </div>
-                        <div class="input-group pull-right">
-                            <input name="ocultar" ng-model="ocultar" ng-change="buscar(this)" type="checkbox" aria-label="...">
-                            <label for="ocultar">Ocultar turmas com conflitos.</label>
-                        </div>
+                    <div class="input-group pull-right">
+                        <input name="ocultar" ng-model="ocultar" ng-change="buscar(this)" type="checkbox" aria-label="...">
+                        <label for="ocultar">Ocultar turmas com conflitos.</label>
+                    </div>
 
-                        <div class="table-container" when-scrolled='carregarMais()'>
-                            <table class="table table-hover table-striped table-condensed" >
-                                <thead>
-                                    <tr>
-                                        <th style="width: 20px;">#</th>
-                                        <th style="width: 75px;">Código</th>
-                                        <th style="width: 100px;">Sigla</th>
-                                        <th>Nome</th>
-                                        <th style="width: 135px;">Turmas</th>
-                                        <th style="width: 100px;">Campus</th>
-                                        <th style="width: 75px;">Período</th>
-                                    </tr>
-                                </thead>
-                                <tbody style="overflow-y: scroll; height: 300px">
-                                    <tr ng-repeat="disciplina in resultados" ng-class="classeDisciplina(this)">
-                                        <td>
-                                            <input type="checkbox" ng-model="disciplina.escolhida" ng-model-change ng-change="checkboxClick(this);buscar(this)">
-                                        </td>
-                                        <td>{{ disciplina.codigo }}</td>
-                                        <td>{{ disciplina.sigla }}</td>
-                                        <td><a target="_blank" href="{{ linkHelp(disciplina) }}">{{ disciplina.nome }}</a>
-                                        </td>
-                                        <td>{{ disciplina.turmas.join(', ') }}</td>
-                                        <td>{{ disciplina.campus }}</td>
-                                        <td>{{ disciplina.periodo }}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                    <div class="table-container" when-scrolled='carregarMais()'>
+                        <table class="table table-hover table-striped table-condensed">
+                            <thead>
+                                <tr>
+                                    <th style="width: 20px;">#</th>
+                                    <th style="width: 75px;">Código</th>
+                                    <th style="width: 100px;">Sigla</th>
+                                    <th>Nome</th>
+                                    <th style="width: 135px;">Turmas</th>
+                                    <th style="width: 100px;">Campus</th>
+                                    <th style="width: 75px;">Período</th>
+                                </tr>
+                            </thead>
+                            <tbody style="overflow-y: scroll; height: 300px">
+                                <tr ng-repeat="disciplina in resultados" ng-class="classeDisciplina(this)">
+                                    <td>
+                                        <input type="checkbox" ng-model="disciplina.escolhida" ng-model-change ng-change="checkboxClick(this);buscar(this)">
+                                    </td>
+                                    <td>{{ disciplina.codigo }}</td>
+                                    <td>{{ disciplina.sigla }}</td>
+                                    <td><a target="_blank" href="{{ linkHelp(disciplina) }}">{{ disciplina.nome }}</a>
+                                    </td>
+                                    <td>{{ disciplina.turmas.join(', ') }}</td>
+                                    <td>{{ disciplina.campus }}</td>
+                                    <td>{{ disciplina.periodo }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" ng-click="limparGrade()">Limpar</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
-                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" ng-click="limparGrade()">Limpar</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
                 </div>
             </div>
         </div>
