@@ -135,7 +135,7 @@ var disciplinasEscolhidas = [];
 
 var atualizarHash = function() {
     var ids = $.map(disciplinasEscolhidas, function(el, i) {
-        return todasDisciplinas.indexOf(el);
+        return el.id;
     });
     window.location.hash = ids.join(',');
 }
@@ -144,7 +144,7 @@ var resgatarHash = function() {
     var ids = window.location.hash.substring(1).split(',');
     disciplinasEscolhidas.length = 0;
     for (var i in ids) {
-        var d = todasDisciplinas[ids[i]];
+        var d = todasDisciplinas.filter(function(d) {return d.id==ids[i]})[0];
         if (d) {
             disciplinasEscolhidas.push(d);
             d.escolhida = true;
