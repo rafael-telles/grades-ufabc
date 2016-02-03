@@ -33,8 +33,8 @@ var completarDisciplina = function(d) {
     for (var i in d.horarios) {
         var h = d.horarios[i];
         h.horas.pop();
-        if (h.semana == 6) {
-            h.semana = 0;
+        if (h.semana == 0) {
+            h.semana = 6;
         }
     }
 
@@ -49,7 +49,7 @@ var completarDisciplina = function(d) {
 
     d.descricao = (d.codigo + ' ' + d.nome + ' ' + d.sigla + ' ' + d.turmas.join(', ') + ' ' + d.periodo + ' ' + d.campus).toUpperCase();
     d.descricao = normalizarTexto(d.descricao);
-        
+
 };
 
 var verificarDuplicata = function(d1, d2) {
