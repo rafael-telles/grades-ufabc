@@ -34,7 +34,6 @@ app.controller("MontadorController", function($scope, $http) {
         for(var i = 0; i < $scope.numItems; i++) {
             $scope.resultados[i] = $scope.todosResultados[i];
         }
-        console.log($scope.numItems,$scope.todosResultados.length,$scope.resultados.length);
     }
 
     $scope.checkboxClick = function(e) {
