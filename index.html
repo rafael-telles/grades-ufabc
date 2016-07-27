@@ -8,7 +8,7 @@
     <link href="css/bootstrap.min.css" rel="stylesheet" media="all" />
 
     <script src='js/jquery.min.js'></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
 
     <script src='js/moment.min.js'></script>
     <script src='js/fullcalendar.min.js'></script>
@@ -17,6 +17,9 @@
     <script src="js/bootstrap.min.js"></script>
 
     <script src="https://matricula.ufabc.edu.br/cache/todasDisciplinas.js"></script>
+    <script src="https://matricula.ufabc.edu.br/cache/contagemMatriculas.js"></script>
+    <script src="https://matricula.ufabc.edu.br/cache/contagemMatriculasIngressantes.js"></script>
+
     <script src="js/funcoes_disciplinas.js"></script>
     <script src="js/integracao_help.js"></script>
     <script src="js/xml2json.min.js"></script>
@@ -124,19 +127,19 @@
         <div class="row">
             <div class="grade-container col-xs-6">
                 <h3>Semana A</h3>
-                <div class="grade" id='grade-a'></div>
+                <div class="grade" id='grade-a' data-semana='A'></div>
             </div>
             <div class="grade-container col-xs-6">
                 <h3>Semana B</h3>
-                <div class="grade" id='grade-b'></div>
+                <div class="grade" id='grade-b' data-semana='B'></div>
             </div>
         </div>
         <h3>Suas disciplinas</h3>
         <table class="lista-disciplinas table">
             <tr ng-repeat="disciplina in escolhidas">
                 <td style='background: {{ gerarCor($index) }}; width: 32px'></td>
-                <td>{{ disciplina.codigo }}</td>
-                <td><a href="{{ linkHelp(disciplina) }}" target="_blank">{{ disciplina.nome }}</a> - {{ disciplina.turmas.join(', ') }} ({{ disciplina.campus }})</td>
+                <td>{{ ::disciplina.codigo }}</td>
+                <td><a href="{{ linkHelp(disciplina) }}" target="_blank">{{ ::disciplina.nome }}</a> - {{ ::disciplina.turmas.join(', ') }} ({{ ::disciplina.campus }})</td>
                 <td style="width: 18px;"><a ng-click="removerDisciplina($index)"><span class="no-print glyphicon glyphicon-remove"></span></a>
                 </td>
             </tr>
@@ -169,10 +172,12 @@
                             <thead>
                                 <tr>
                                     <th style="width: 20px;">#</th>
-                                    <th style="width: 75px;">Código</th>
-                                    <th style="width: 100px;">Sigla</th>
+                                    <th style="width: 95px;">Código</th>
+                                    <th style="width: 60px;">Sigla</th>
                                     <th>Nome</th>
-                                    <th style="width: 135px;">Turmas</th>
+                                    <th style="width: 25px;">Requisições</th>
+                                    <th style="width: 50px;">TPI</th>
+                                    <th style="width: 25px;">Turma</th>
                                     <th style="width: 100px;">Campus</th>
                                     <th style="width: 75px;">Período</th>
                                 </tr>
@@ -182,13 +187,15 @@
                                     <td>
                                         <input type="checkbox" ng-model="disciplina.escolhida" ng-model-change ng-change="checkboxClick(this);buscar(this)">
                                     </td>
-                                    <td>{{ disciplina.codigo }}</td>
-                                    <td>{{ disciplina.sigla }}</td>
-                                    <td><a target="_blank" href="{{ linkHelp(disciplina) }}">{{ disciplina.nome }}</a>
+                                    <td>{{ ::disciplina.codigo }}</td>
+                                    <td>{{ ::disciplina.sigla }}</td>
+                                    <td><a target="_blank" href="{{ ::linkHelp(disciplina) }}">{{ ::disciplina.nome }}</a>
                                     </td>
-                                    <td>{{ disciplina.turmas.join(', ') }}</td>
-                                    <td>{{ disciplina.campus }}</td>
-                                    <td>{{ disciplina.periodo }}</td>
+                                    <td>{{ ::disciplina.contagemMatriculas + ' / ' + disciplina.vagas }}</td>
+                                    <td>{{ ::disciplina.tpi.join('-') }}</td>
+                                    <td>{{ ::disciplina.turmas.join(', ') }}</td>
+                                    <td>{{ ::disciplina.campus }}</td>
+                                    <td>{{ ::disciplina.periodo }}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -222,8 +229,8 @@
         axisFormat: 'H:mm',
         slotEventOverlap: false,
         eventOverlap: false,
-
         editable: false,
+
         columnFormat: {
             week: 'ddd'
         },

@@ -1,35 +1,19 @@
 var processarDisciplinas = function (ds) {
-    var ret = [];
-
-    for (var i in ds) {
-        var d = ds[i];
-        completarDisciplina(d);
-
-        var temDuplicata = false;
-        for (var j in ret) {
-            var unica = ret[j];
-            if (verificarDuplicata(d, unica)) {
-                unica.turmas = unica.turmas.concat(d.turmas);
-
-                temDuplicata = true;
-                break;
-            }
-        }
-        if (!temDuplicata) {
-            ret.push(d);
-        }
+    for (var i = 0; i < ds.length; i++) {
+        completarDisciplina(i, ds[i]);
     }
-    return ret;
+    return ds;
 };
 
-var completarDisciplina = function(d) {
+var completarDisciplina = function(id, d) {
     var patt = /(.*) (\w+(?=-))-(\w+) \((.*)\)/;
     var match = patt.exec(d.nome);
     d.nome = match[1];
     d.turmas = [match[2]];
     d.periodo = match[3];
     d.campus = match[4];
-
+    d.contagemMatriculas = contagemMatriculas[d.id] || 0;
+    d.contagemMatriculasIngressantes = contagemMatriculasIngressantes[d.id] || 0;
     for (var i in d.horarios) {
         var h = d.horarios[i];
         h.horas.pop();
@@ -47,36 +31,23 @@ var completarDisciplina = function(d) {
         }
     }
 
-    d.descricao = (d.codigo + ' ' + d.nome + ' ' + d.sigla + ' ' + d.turmas.join(', ') + ' ' + d.periodo + ' ' + d.campus).toUpperCase();
-    d.descricao = normalizarTexto(d.descricao);
+    var descParts = [d.codigo, d.nome, d.sigla, d.periodo, d.campus, d.turmas, d.horarios.map(function(h) {return nomeDoDia(h.semana); })];
 
-};
-
-var verificarDuplicata = function(d1, d2) {
-    return false;
-    /* return d1.codigo == d2.codigo &&
-        d1.turno == d2.turno &&
-        d1.campus == d2.campus &&
-        JSON.stringify(d1.horarios) == JSON.stringify(d2.horarios); */
+    descParts = [].concat.apply([], descParts);
+    d.descricao = normalizarTexto(descParts.join(' ').toUpperCase());
 };
 
 var buscarDisciplinas = function(termo) {
-    termo = termo || '';
-    termo = normalizarTexto(termo);
-    var partes = termo.split(" "), ret = [], i, j, encontrou;
-    for (i = 0; i < todasDisciplinas.length; i++) {
-        encontrou = true;
-        for (j = 0; j < partes.length; j++) {
-            if (todasDisciplinas[i].descricao.indexOf(partes[j]) == -1) {
-                encontrou = false;
-                break;
+    var partes = normalizarTexto(termo || '').split(" ");
+
+    return todasDisciplinas.filter(function(d) {
+        for (var i = 0; i < partes.length; i++) {
+            if (d.descricao.indexOf(partes[i]) === -1) {
+                return false;
             }
         }
-        if (encontrou) {
-            ret.push(todasDisciplinas[i]);
-        }
-    }
-    return ret;
+        return true;
+    });
 };
 
 var verificarConflito = function(d1, d2) {
@@ -105,6 +76,11 @@ var verificarConflito = function(d1, d2) {
     return false;
 }
 
+var verificarConflitoMulti = function(d, ds) {
+    var horarios = $.unique([].concat.apply([], ds.map(function(d) {return d.horarios})));
+    return verificarConflito(d, {horarios: horarios});
+}
+
 var gerarCor = function(i) {
     return ['#F44336', //Red
             '#9C27B0', //Purple
@@ -117,6 +93,10 @@ var gerarCor = function(i) {
             '#E91E63', //Pink
             '#795548', //Brown
            ][i];
+}
+
+var nomeDoDia = function(d) {
+    return ['SABADO', 'SEGUNDA', 'TERCA', 'QUARTA', 'QUINTA', 'SEXTA', 'SABADO'][d];
 }
 
 var normalizarTexto = function(texto) {
@@ -176,7 +156,7 @@ var atualizarGrade = function() {
                 .toISOString();
             var grade = $('.grade');
             if (h.periodicidade_extenso === " - quinzenal (I)") grade = $("#grade-a");
-            if (h.periodicidade_extenso === " - quinzenal (II)") grade = $("#grade-b");
+            else if (h.periodicidade_extenso === " - quinzenal (II)") grade = $("#grade-b");
             grade.fullCalendar('renderEvent', {
                 title: d.sigla,
                 url: linkHelp(d),

@@ -51,13 +51,11 @@ app.controller("MontadorController", function($scope, $http) {
     };
 
     $scope.classeDisciplina = function(e) {
-        for (var i in disciplinasEscolhidas) {
-            if (e.disciplina == disciplinasEscolhidas[i]) {
-                return "success";
-            }
-            if (verificarConflito(e.disciplina, disciplinasEscolhidas[i])) {
-                return "danger";
-            }
+        if (disciplinasEscolhidas.indexOf(e.disciplina) !== -1) {
+            return "success";
+        }
+        else if (verificarConflitoMulti(e.disciplina, disciplinasEscolhidas)) {
+            return "danger";
         }
         return "";
     };
