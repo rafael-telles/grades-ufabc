@@ -27,8 +27,7 @@
 
     <style>
     .resumo {
-        position: relative;
-        top: 50px;
+        margin-top: 50px;
     }
     .table-container {
         height: 300px;
@@ -58,6 +57,27 @@
     }
     .lista-disciplinas a {
         text-decoration: none;
+    }
+    html, body {
+        height: 100%;
+    }
+    body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100%;
+    }
+    .container.resumo {
+        flex: 1 0 auto;
+    }
+    .footer {
+        flex-shrink: 0;
+        margin-top: 20px;
+        padding: 8px 0;
+        border-top: 1px solid #e7e7e7;
+        font-size: 12px;
+    }
+    .footer p {
+        margin: 0;
     }
     @media screen and (max-width: 1200px) {
         .grade-container {
@@ -91,6 +111,30 @@
         }
     }
     </style>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "UFABC - Montador de Grades",
+        "alternateName": "Montador de Grades UFABC",
+        "url": "https://rafael-telles.github.io/grades-ufabc/",
+        "description": "Monte sua grade de disciplinas da UFABC e visualize os horários das semanas A e B, com créditos, TPI e vagas.",
+        "applicationCategory": "EducationalApplication",
+        "operatingSystem": "Web",
+        "inLanguage": "pt-BR",
+        "isAccessibleForFree": true,
+        "author": {
+            "@type": "Person",
+            "name": "Rafael Telles",
+            "url": "https://telles.dev",
+            "sameAs": [
+                "https://github.com/rafael-telles",
+                "https://www.linkedin.com/in/rafael-telles"
+            ]
+        }
+    }
+    </script>
 </head>
 
 <body ng-app="MontadorDeGrades" ng-controller="MontadorController">
@@ -133,8 +177,6 @@
                   <li>Agora é possível procurar por aulas por dias da semana</li>
                   <li>A tabela de disciplinas mostra o TPI, quantidade de requisições e quantidade de vagas</li>
               </ul>
-              <br>
-              Duvidas? Sugestões? Entre em contato pelo <a href="https://www.facebook.com/raftelti">Facebook</a> :)
             </div>
 
             <div class="grade-container col-xs-6">
@@ -157,6 +199,14 @@
             </tr>
         </table>
     </div>
+
+    <footer class="footer no-print">
+        <div class="container text-center">
+            <p class="text-muted">
+                Feito com <span aria-hidden="true">❤️</span> por <a href="https://telles.dev" rel="me">Rafael Telles</a>
+            </p>
+        </div>
+    </footer>
 
     <div id="myModal" class="no-print modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 
